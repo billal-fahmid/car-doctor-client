@@ -2,16 +2,19 @@ import React, { useContext, useEffect, useState } from 'react';
 import img from '../../assets/images/checkout/checkout.png'
 import { AuthContext } from '../../provider/AuthProvider';
 import BookingRow from './BookingRow';
+import { useNavigate } from 'react-router-dom';
 
 const Bookings = () => {
     const { user } = useContext(AuthContext)
 
     const [bookings, setBookings] = useState([])
+    const navigate = useNavigate()
+
     const handleDelete =id=>{
         console.log(id)
         const proceed = confirm('Are you sure ! you want delete this')
         if(proceed){
-            fetch(`http://localhost:5000/checkouts/${id}`,{
+            fetch(`https://car-doctor-server-billal-fahmid.vercel.app/checkouts/${id}`,{
                 method:'DELETE'
             })
             .then(res => res.json())
@@ -27,7 +30,7 @@ const Bookings = () => {
 
     const handleConfirm =(id)=>{
         console.log(id)
-        fetch(`http://localhost:5000/checkouts/${id}` ,{
+        fetch(`https://car-doctor-server-billal-fahmid.vercel.app/checkouts/${id}` ,{
             method:'PATCH',
             headers:{
                 'content-type':'application/json'
@@ -48,16 +51,25 @@ const Bookings = () => {
         })
     }
 
-    const url = `http://localhost:5000/checkouts?email=${user?.email}`
+    const url = `https://car-doctor-server-billal-fahmid.vercel.app/checkouts?email=${user?.email}`
 
     useEffect(() => {
-        fetch(url)
+        fetch(url,{
+            method:'GET',
+            headers:{
+                authorization:`Bearer ${localStorage.getItem('car-access-token')}`
+            }
+        })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
-                setBookings(data)
+                if(!data.error){
+                    setBookings(data)
+                }
+                else{
+                    navigate('/')
+                }
             })
-    }, [url])
+    }, [url , navigate])
 
     return (
         <div>

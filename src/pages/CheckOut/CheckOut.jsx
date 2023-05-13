@@ -26,7 +26,7 @@ const CheckOut = () => {
             price
         }
         console.log(order)
-        fetch(`http://localhost:5000/checkouts`,{
+        fetch(`https://car-doctor-server-billal-fahmid.vercel.app/checkouts`,{
             method:'POST',
             headers:{
                 'content-type':'application/json'

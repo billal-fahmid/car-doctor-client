@@ -1,23 +1,30 @@
 import React, { useContext } from 'react';
 import img from '../../assets/images/login/login.svg'
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../provider/AuthProvider';
+import SocailLogin from '../Shared/SocailLogin/SocailLogin';
 
 const Login = () => {
 
     const {loginUser} = useContext(AuthContext)
+    const location = useLocation();
+    const navigate = useNavigate()
+    const from = location.state?.from?.pathname || '/' ;
 
     const handleLogin = e =>{
         e.preventDefault()
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
-        console.log(email , password)
+        // console.log(email , password)
 
         loginUser(email , password)
         .then(result =>{
             const loggedUser = result.user;
             console.log(loggedUser)
+            navigate(from ,{replace:true})
+
+    
         })
         .catch(err => console.log(err))
     }
@@ -44,7 +51,7 @@ const Login = () => {
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input type="text" placeholder="password" name='password' className="input input-bordered" />
+                                <input type="password" placeholder="password" name='password' className="input input-bordered" />
                                 <label className="label">
                                     <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                                 </label>
@@ -55,6 +62,7 @@ const Login = () => {
                             </div>
                         </form>
                         <p className='my-4 text-center'>New to car doctor ! <Link to='/signup' className='text-[#ff3811] font-bold'> Sign Up</Link></p>
+                        <SocailLogin></SocailLogin>
 
                     </div>
                 </div>
